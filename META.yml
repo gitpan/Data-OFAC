@@ -24,4 +24,4 @@ requires:
   LWP::Request: 0
   Text::CSV: 0
   perl: 5.006
-version: 0.50
+version: 0.51

@@ -1,4 +1,8 @@
 Revision history for Data-OFAC
+
+0.51 2013-11-11/21:17 PST
+  - Correct wildly innacurate documentation.
+
 0.50 2013-11-11/18:30 PST
   - Initial release to CPAN.
 

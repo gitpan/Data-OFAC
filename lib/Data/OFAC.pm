@@ -12,11 +12,11 @@ Control (OFAC) Specially Designated Nationals List (SDN)
 
 =head1 VERSION
 
-Version 0.50
+Version 0.51
 
 =cut
 
-our $VERSION = '0.50';
+our $VERSION = '0.51';
 
 =head1 DESCRIPTION
 
@@ -36,13 +36,12 @@ our $VERSION = '0.50';
     Note that this module will require occasional internet access if
     auto_update is enabled. Auto update contacts OFAC's website to download
     the latest SDN list in "CSV" format. These files are used to build a SQLite
-    database. Note that this distribution also compiles a C module for SQLite
-    that enables "soundex" based searches. If you lack a C compiler, you can use
-    the property "use_only_exact" to avoid the need for the SQLite module. If
-    you lack an internet connection, you can build the database on another
-    machine and transfer it by whatever means available. You should note that
-    OFAC updates this database quite regularly and, in order to remain
-    compliant, you should closely match their update schedule.
+    database. In order to remain "compliant" reasonably frequent updates are
+    recommended. For financial institutions, not complying with this carries
+    heavy penalties. I am not a lawyer, and I cannot recommend your update
+    frequency. I've set 12 hours as I believe this to be a reasonable update
+    interval. Again, this module carries no waranty, and cannot be a full
+    replacement for full compliance with the regulations. YMMV.
 
 =head1 SYNOPSIS
 
@@ -53,18 +52,14 @@ our $VERSION = '0.50';
     my $ofac = Data::OFAC->new(
         auto_update => 1,
         auto_update_frequency => 12,
-        database_file => '/path/to/sdn.sqlite',
-        use_only_exact => 0
+        database_file => '/path/to/sdn.sqlite'
     );
 
-    my $result = $ofac->check($string);
+    my $result = $ofac->checkString($string);
 
-    unless ( $result->is_success() ) {
-        print "Hit found:",
-            "\nHit strength: ", $result->strength,
-            "\nSDN Entity Number: ", $result->entitynumber,
-            "\n";
-
+    if ( defined $result ) {
+        print "Hit found:" .
+            Dumper $result; # varries by hit, but is just a hash.
     }
     ...
 
@@ -81,17 +76,18 @@ our $VERSION = '0.50';
     table in SQLite to determine the last update date/time and decide if
     checking for a new update is warranted. Note that the download is not
     particularly large, but the download and subsequent rebuild of the database
-    could introduce a startup penalty that may be undesirable. For long running
-    processes, there is no present method for updating on the fly.
+    could introduce a startup penalty that may be undesirable. (30 seconds on my
+    quad core MBP) For long running processes, there is no present method for
+    updating on the fly. Since I run this as part of a larger web service, my
+    processes cycle frequently enough that I never have this problem. YMMV
 
     0 - disable
     1 - enable *default
 
 =head3 auto_update_frequency [int] (Optional)
 
-    Sets the desired delay between rechecks. Only useful if your process is
-    long running. Otherwise Data::OFAC will recheck at each start if the
-    auto_update property is set to 1.
+    Sets the desired delay between rechecks. Data::OFAC will recheck at each
+    start if the auto_update property is set to 1.
 
     Default: 12 (hours)
 
