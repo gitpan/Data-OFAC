@@ -19,7 +19,7 @@ WriteMakefile(
     },
     PREREQ_PM => {
         'Text::CSV' => 0,
-        'LWP::Request' => 0,
+        'LWP' => 0,
         'DBD::SQLite' => 0,
         'Archive::Extract' => 0,
         'DBIx::Class::Schema' => 0

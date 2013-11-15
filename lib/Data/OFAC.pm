@@ -12,11 +12,11 @@ Control (OFAC) Specially Designated Nationals List (SDN)
 
 =head1 VERSION
 
-Version 0.52
+Version 0.54
 
 =cut
 
-our $VERSION = '0.52';
+our $VERSION = '0.54';
 
 =head1 DESCRIPTION
 

@@ -35,12 +35,12 @@
             "Archive::Extract" : "0",
             "DBD::SQLite" : "0",
             "DBIx::Class::Schema" : "0",
-            "LWP::Request" : "0",
+            "LWP" : "0",
             "Text::CSV" : "0",
             "perl" : "5.006"
          }
       }
    },
    "release_status" : "stable",
-   "version" : "0.52"
+   "version" : "0.54"
 }
