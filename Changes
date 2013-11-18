@@ -1,4 +1,6 @@
 Revision history for Data-OFAC
+0.56 2013-11-18/07:33 PST
+  - Add missing prereq.
 
 0.54 2013-11-14/12:33 PST
   - Comply with my CPANTS masters.

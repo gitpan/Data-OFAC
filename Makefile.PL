@@ -22,7 +22,8 @@ WriteMakefile(
         'LWP' => 0,
         'DBD::SQLite' => 0,
         'Archive::Extract' => 0,
-        'DBIx::Class::Schema' => 0
+        'DBIx::Class::Schema' => 0,
+        'DBIx::Class::PhoneticSearch' => 0
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Data-OFAC-*' },
