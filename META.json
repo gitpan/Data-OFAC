@@ -1,10 +1,10 @@
 {
-   "abstract" : "A Perl interface to the United States Office of Foreign Assets Control (OFAC) Specially Designated Nationals List (SDN)",
+   "abstract" : "A Perl interface to the United States Office of Foreign Assets",
    "author" : [
       "tyler hardison <tyler@seraph-net.net>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "ExtUtils::MakeMaker version 6.82, CPAN::Meta::Converter version 2.132830",
+   "generated_by" : "ExtUtils::MakeMaker version 6.6302, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "unknown"
    ],
@@ -33,6 +33,7 @@
       "runtime" : {
          "requires" : {
             "Archive::Extract" : "0",
+            "Archive::Zip" : "0",
             "DBD::SQLite" : "0",
             "DBIx::Class::PhoneticSearch" : "0",
             "DBIx::Class::Schema" : "0",
@@ -43,5 +44,5 @@
       }
    },
    "release_status" : "stable",
-   "version" : "0.56"
+   "version" : "0.58"
 }
