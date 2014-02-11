@@ -1,4 +1,5 @@
 use utf8;
+
 package Data::OFAC::SDN::Schema::Result::Sdn;
 
 # Created by DBIx::Class::Schema::Loader
@@ -27,7 +28,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components("PhoneticSearch", "Core");
+__PACKAGE__->load_components( "PhoneticSearch", "Core" );
 
 =head1 TABLE: C<SDN>
 
@@ -100,30 +101,30 @@ __PACKAGE__->table("SDN");
 =cut
 
 __PACKAGE__->add_columns(
-  "ent_num",
-  { data_type => "numeric", is_nullable => 0 },
-  "sdn_name",
-  { data_type => "text", is_nullable => 1, phonetic_search => 1 },
-  "sdn_type",
-  { data_type => "text", is_nullable => 0 },
-  "program",
-  { data_type => "text", is_nullable => 0 },
-  "title",
-  { data_type => "text", is_nullable => 1, phonetic_search => 1 },
-  "call_sign",
-  { data_type => "text", is_nullable => 1 },
-  "vess_type",
-  { data_type => "text", is_nullable => 1 },
-  "tonnage",
-  { data_type => "text", is_nullable => 1 },
-  "grt",
-  { data_type => "text", is_nullable => 1 },
-  "vess_flag",
-  { data_type => "text", is_nullable => 1 },
-  "vess_owner",
-  { data_type => "text", is_nullable => 1 },
-  "remarks",
-  { data_type => "text", is_nullable => 1 },
+    "ent_num",
+    { data_type => "numeric", is_nullable => 0 },
+    "sdn_name",
+    { data_type => "text", is_nullable => 1, phonetic_search => 1 },
+    "sdn_type",
+    { data_type => "text", is_nullable => 0 },
+    "program",
+    { data_type => "text", is_nullable => 0 },
+    "title",
+    { data_type => "text", is_nullable => 1, phonetic_search => 1 },
+    "call_sign",
+    { data_type => "text", is_nullable => 1 },
+    "vess_type",
+    { data_type => "text", is_nullable => 1 },
+    "tonnage",
+    { data_type => "text", is_nullable => 1 },
+    "grt",
+    { data_type => "text", is_nullable => 1 },
+    "vess_flag",
+    { data_type => "text", is_nullable => 1 },
+    "vess_owner",
+    { data_type => "text", is_nullable => 1 },
+    "remarks",
+    { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -139,6 +140,7 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("ent_num");
 
 __PACKAGE__->resultset_class('DBIx::Class::ResultSet::PhoneticSearch');
+
 =head1 RELATIONS
 
 =head2 addresses
@@ -150,10 +152,10 @@ Related object: L<Data::OFAC::SDN::Schema::Result::Address>
 =cut
 
 __PACKAGE__->has_many(
-  "addresses",
-  "Data::OFAC::SDN::Schema::Result::Address",
-  { "foreign.ent_num" => "self.ent_num" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "addresses",
+    "Data::OFAC::SDN::Schema::Result::Address",
+    { "foreign.ent_num" => "self.ent_num" },
+    { cascade_copy      => 0, cascade_delete => 0 },
 );
 
 =head2 alts
@@ -165,16 +167,14 @@ Related object: L<Data::OFAC::SDN::Schema::Result::Alt>
 =cut
 
 __PACKAGE__->has_many(
-  "alts",
-  "Data::OFAC::SDN::Schema::Result::Alt",
-  { "foreign.ent_num" => "self.ent_num" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "alts",
+    "Data::OFAC::SDN::Schema::Result::Alt",
+    { "foreign.ent_num" => "self.ent_num" },
+    { cascade_copy      => 0, cascade_delete => 0 },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07037 @ 2013-11-11 16:58:48
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xYy/SCgpuUw4u4r/QkpzUw
-
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

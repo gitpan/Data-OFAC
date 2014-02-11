@@ -12,11 +12,11 @@ Control (OFAC) Specially Designated Nationals List (SDN)
 
 =head1 VERSION
 
-Version 0.58
+Version 0.65
 
 =cut
 
-our $VERSION = '0.58';
+our $VERSION = '0.65';
 
 =head1 DESCRIPTION
 
@@ -102,10 +102,10 @@ our $VERSION = '0.58';
 
 sub new {
     my $class = shift;
-    my %vars = @_;
-    my $self = bless {}, $class;
+    my %vars  = @_;
+    my $self  = bless {}, $class;
 
-    map { $self->{$_} = $vars{$_}} keys %vars;
+    map { $self->{$_} = $vars{$_} } keys %vars;
 
     unless ( defined $self->{auto_update} ) {
         $self->{auto_update} = 1;
@@ -120,13 +120,16 @@ sub new {
     }
 
     unless ( defined $self->{database_file} ) {
-        unless ( -d ( $ENV{HOME} || $ENV{USERPROFILE} ) . "/.ofac") {
-            mkdir (( $ENV{HOME} || $ENV{USERPROFILE} ) . "/.ofac");
+        unless ( -d ( $ENV{HOME} || $ENV{USERPROFILE} ) . "/.ofac" ) {
+            mkdir( ( $ENV{HOME} || $ENV{USERPROFILE} ) . "/.ofac" );
         }
-        $self->{database_file} = ( $ENV{HOME} || $ENV{USERPROFILE} ) . "/.ofac/sdn.sqlite";
+        $self->{database_file}
+            = ( $ENV{HOME} || $ENV{USERPROFILE} ) . "/.ofac/sdn.sqlite";
     }
 
     $self->{sdn} = Data::OFAC::SDN->new( p => $self );
+
+    $self->{_status} = $self->{sdn}->{_status};
 
     return $self;
 
@@ -141,27 +144,28 @@ my $result = $ofac->checkString("String");
 =cut
 
 sub checkString {
-    my $self = shift;
+    my $self   = shift;
     my $string = shift;
-    my $opts = shift;
+    my $opts   = shift;
 
     my $resultset;
 
     my @columns = qw{sdn_name title};
 
-    for ( qw {Sdn SdnComment} ) {
+    for (qw {Sdn SdnComment}) {
 
-        $resultset->{$_} = $self->{sdn}->search($_, $string, @columns);
+        $resultset->{$_} = $self->{sdn}->search( $_, $string, @columns );
 
     }
 
     @columns = qw{alt_name};
 
-    $resultset->{Alt} = $self->{sdn}->search('Alt', $string, @columns);
+    $resultset->{Alt} = $self->{sdn}->search( 'Alt', $string, @columns );
 
     @columns = qw{citystateprovincepostalcode country};
 
-    $resultset->{Address} = $self->{sdn}->search('Address', $string, @columns);
+    $resultset->{Address}
+        = $self->{sdn}->search( 'Address', $string, @columns );
 
     return $resultset;
 }
@@ -177,11 +181,11 @@ my $result =
 =cut
 
 sub checkAddress {
-    my $self = shift;
+    my $self    = shift;
     my $address = shift;
     my $country = shift;
 
-    return $self->{sdn}->searchAddress($address, $country);
+    return $self->{sdn}->searchAddress( $address, $country );
 }
 
 =head2 checkName
@@ -200,17 +204,47 @@ sub checkName {
 
     my @columns = qw{sdn_name title};
 
-    for ( qw {Sdn SdnComment} ) {
+    for (qw {Sdn SdnComment}) {
 
-        $resultset->{$_} = $self->{sdn}->search($_, $name, @columns);
+        $resultset->{$_} = $self->{sdn}->search( $_, $name, @columns );
 
     }
 
     @columns = qw{alt_name};
 
-    $resultset->{Alt} = $self->{sdn}->search('Alt', $name, @columns);
+    $resultset->{Alt} = $self->{sdn}->search( 'Alt', $name, @columns );
 
     return $resultset;
+}
+
+=head2 checkStatus
+
+Checks for the database status after startup. Returns "dirty" or "clean". Handy
+for determining the validity of the data being returned. Dirty just indicates
+that the database hasn't been updated recently.
+
+=cut
+
+sub checkStatus {
+    return $_->{_status};
+}
+
+=head2 willUpdate
+
+Checks if the next search call will force a database update. If yes, the call
+will return "defined" or 1. Helpful if your application is timing sensitive to
+prespin the update before your next search. Note that at this time, updating is
+a blocking call.
+
+=cut
+
+sub willUpdate {
+
+    ( time() - $_->{sdn}->{_lastupdate} )
+        >= ( $_->{auto_update_frequency} * 60 * 60 )
+        && return 1;
+
+    return undef;
 }
 
 =head1 AUTHOR
@@ -302,4 +336,4 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =cut
 
-1; # End of Data::OFAC
+1;    # End of Data::OFAC
