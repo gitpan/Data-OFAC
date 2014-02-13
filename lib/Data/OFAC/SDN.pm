@@ -6,7 +6,6 @@ use LWP::UserAgent;
 use Archive::Extract;
 use Carp;
 use Text::CSV;
-use Data::Dumper;
 use Data::OFAC::SDN::Schema;
 
 use constant { SDNURL => 'http://www.treasury.gov/ofac/downloads/sdall.zip' };
@@ -50,8 +49,6 @@ sub new {
             ->search( {}, { order_by => 'LASTUPDATEDATETIME' } );
         my $lastupdate = $lupdate->single;
 
-        #warn Dumper $lastupdate;
-        #$lastupdate->result_source->schema;
         if ( defined $lastupdate
             && ( time() - $lastupdate->lastupdatedatetime )
             >= ( $self->{p}->{auto_update_frequency} * 3600 ) )
@@ -93,10 +90,10 @@ sub buildDatabase {
     my $zip  = shift;
 
     if ( $^O eq 'MSWin32' ) {
-        $self->{tempdir} = $ENV{TEMP};
+        $self->{tempdir} = $ENV{TEMP} . '/';
     }
     else {
-        $self->{tempdir} = $ENV{TMPDIR};
+        $self->{tempdir} = $ENV{TMPDIR} . '/';
     }
 
     my $sdnzip = ( $self->{tempdir} || '/tmp/' ) . "sdn.zip";
@@ -119,8 +116,6 @@ sub buildDatabase {
     map { $self->{_z}->{lc($_)} = $_ } @{$ae->files};
 
     map { $self->{_f}->{$_} = $self->{_z}->{$_} } qw{ sdn.csv sdn_comments.csv add.csv alt.csv};
-
-    warn Dumper $self->{_f};
 
     unless ( scalar keys %{$self->{_f}} == 4 ) { # Exactly four needed
         $self->{_status} = 'dirty';
