@@ -1,4 +1,8 @@
 Revision history for Data-OFAC
+0.67 2014-02-18/12:00 PST
+0.66
+  - Solving for multiple temp directory issues.
+  
 0.58 2013-11-18/15:34 PST
   - Add missing prereq.
 
@@ -13,4 +17,3 @@ Revision history for Data-OFAC
 
 0.50 2013-11-11/18:30 PST
   - Initial release to CPAN.
-

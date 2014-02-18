@@ -93,7 +93,8 @@ sub buildDatabase {
         $self->{tempdir} = $ENV{TEMP} . '/';
     }
     else {
-        $self->{tempdir} = $ENV{TMPDIR} . '/';
+        # Seriously? WTF People?
+        $self->{tempdir} = ($ENV{TMPDIR} || '/tmp') . '/';
     }
 
     my $sdnzip = ( $self->{tempdir} || '/tmp/' ) . "sdn.zip";
