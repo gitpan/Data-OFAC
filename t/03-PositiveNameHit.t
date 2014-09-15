@@ -7,4 +7,4 @@ ok(1);
 ok(my $ofac = Data::OFAC->new());
 
 ok($result = $ofac->checkName('ABASTECEDORA NAVAL Y INDUSTRIAL, S.A.'));
-ok($result->{entityhit} eq 'ABASTECEDORA NAVAL Y INDUSTRIAL, S.A.' ? 0 : 1 );
+ok((defined $result && defined $result->{entityhit} && $result->{entityhit} eq 'ABASTECEDORA NAVAL Y INDUSTRIAL, S.A.' ) ? 0 : 1 );

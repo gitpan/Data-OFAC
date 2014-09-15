@@ -137,7 +137,7 @@ __PACKAGE__->add_columns(
 
 =cut
 
-__PACKAGE__->set_primary_key("ent_num");
+#__PACKAGE__->set_primary_key("ent_num");
 
 __PACKAGE__->resultset_class('DBIx::Class::ResultSet::PhoneticSearch');
 

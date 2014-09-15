@@ -59,7 +59,7 @@ sub new {
         return $self;
     }
 
-    unless ( $self->{_status} eq 'dirty') {
+    unless ( $self->{_status} && $self->{_status} eq 'dirty') {
         $self->{_status} = 'clean';
     }
 
@@ -82,7 +82,7 @@ sub updateDatabase {
         $self->{_status} = 'dirty';
     }
 
-    return;
+    return 1;
 }
 
 sub buildDatabase {
@@ -123,8 +123,10 @@ sub buildDatabase {
         return; # Abort
     }
 
+    # Changed to set up a temporary database to make the swap out quick.
+
     $self->{dbh}
-        = DBI->connect( 'dbi:SQLite:' . ( $self->{p}->{database_file} ),
+        = DBI->connect( 'dbi:SQLite:' . ( $self->{p}->{database_file} ) . '_temp',
         "", "", { RaiseError => 1 } );
 
     unless ( $self->{dbh} ) {
@@ -137,7 +139,15 @@ sub buildDatabase {
     $self->LASTUPDATETable;
     $self->SDNCOMMENTSTable;
 
-    $self->{dbh}->disconnect;
+    $self->{dbh}->disconnect();
+
+    unlink($self->{p}->{database_file});
+    rename($self->{p}->{database_file}.'_temp', $self->{p}->{database_file});
+
+    $self->{db}
+        = Data::OFAC::SDN::Schema->connect(
+        "dbi:SQLite:" . $self->{p}->{database_file} )
+        unless defined $self->{db};
 
     $self->{csv} = Text::CSV->new();
 
@@ -176,6 +186,8 @@ sub buildDatabase {
     $lu = $self->{db}->resultset('Lastupdate')
         ->create( { lastupdatedatetime => $self->{_lastupdate} } );
     $lu->update;
+
+
 
     return;
 
@@ -231,8 +243,7 @@ CREATE TABLE SDN  (
         Vess_owner	TEXT,
         remarks   	TEXT,
         sdn_name_phonetic_phonix   TEXT,
-        title_phonetic_phonix      TEXT,
-        PRIMARY KEY(ent_num)
+        title_phonetic_phonix      TEXT
 )" );
     return;
 }
@@ -256,8 +267,7 @@ CREATE TABLE SDN_COMMENTS  (
         Vess_owner	TEXT,
         remarks   	TEXT,
         sdn_name_phonetic_phonix   TEXT,
-        title_phonetic_phonix      TEXT,
-        PRIMARY KEY(ent_num)
+        title_phonetic_phonix      TEXT
 )" );
     return;
 }
@@ -275,11 +285,7 @@ CREATE TABLE \"ADDRESS\"  (
         Country                    	TEXT,
         Add_remarks                	TEXT,
         CityStateProvincePostalCode_phonetic_phonix	TEXT,
-        Country_phonetic_phonix                    	TEXT,
-        FOREIGN KEY(ent_num)
-        REFERENCES SDN(ent_num)
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        Country_phonetic_phonix                    	TEXT
 )" );
     return;
 }
@@ -295,11 +301,7 @@ CREATE TABLE ALT  (
         alt_type   	TEXT,
         alt_name   	TEXT,
         alt_remarks	TEXT,
-        alt_name_phonetic_phonix   TEXT,
-        FOREIGN KEY(ent_num)
-        REFERENCES SDN(ent_num)
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        alt_name_phonetic_phonix   TEXT
 )" );
     return;
 }

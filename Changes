@@ -1,4 +1,6 @@
 Revision history for Data-OFAC
+0.80 2014-09-15/07:25:00 PDT
+  - Apparently the US Government has no idea what a unique key is.
 0.67 2014-02-18/12:00 PST
 0.66
   - Solving for multiple temp directory issues.

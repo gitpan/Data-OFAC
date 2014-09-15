@@ -12,11 +12,11 @@ Control (OFAC) Specially Designated Nationals List (SDN)
 
 =head1 VERSION
 
-Version 0.67
+Version 0.80
 
 =cut
 
-our $VERSION = '0.67';
+our $VERSION = '0.80';
 
 =head1 DESCRIPTION
 
@@ -245,6 +245,19 @@ sub willUpdate {
         && return 1;
 
     return undef;
+}
+
+=head2 forceUpdate
+
+Force the update of the database. Will cause a database update to occur. Note
+that this call still blocks, but is handy if you want an out-of-band process
+to handle the updating.
+
+=cut
+
+sub forceUpdate {
+    my $self = shift;
+    return $self->{sdn}->updateDatabase();
 }
 
 =head1 AUTHOR

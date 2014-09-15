@@ -139,7 +139,7 @@ __PACKAGE__->resultset_class('DBIx::Class::ResultSet::PhoneticSearch');
 
 =cut
 
-__PACKAGE__->set_primary_key("ent_num");
+#__PACKAGE__->set_primary_key("ent_num");
 
 # Created by DBIx::Class::Schema::Loader v0.07037 @ 2013-11-11 16:58:48
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Aqmj7o4OjqAK553p84L3Bw
